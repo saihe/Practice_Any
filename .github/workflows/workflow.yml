@@ -1,0 +1,24 @@
+name: practice
+on:
+  workflow_dispatch:
+env:
+  tag: ""
+jobs:
+  job1:
+    outputs:
+      tag: ${{ steps.main.outputs.tag }}
+    steps:
+      - name: set
+        id: main
+        run: |
+          echo "tag=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV &&\
+          echo "$tag" >> $GITHUB_OUTPUT
+      - name: print env
+        run: echo ${{ env.tag }}
+      - name: print output
+        run: echo ${{ steps.main.outputs.tag }}
+  job2:
+    needs: job1
+    steps:
+      - name: print needs
+        run: echo ${{ needs.job1.outputs.tag }}
